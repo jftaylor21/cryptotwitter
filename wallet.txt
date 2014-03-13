@@ -1,0 +1,26 @@
+{
+  "redd":
+  {
+    "address":"Rw2k4Vsf4ckvBktkpCPMrdrx423syUjeMb",
+    "tickerkey":"BTC_REDD",
+    "balance":"http://cryptexplorer.com/chain/reddcoin/q/addressbalance/"
+  },
+  "bit":
+  {
+    "address":"17BHintbMV3CbDmhZphGchqf7NXqykP84c",
+    "tickerkey":"BTC_BTC",
+    "balance":"http://blockexplorer.com/q/addressbalance/"
+  },
+  "doge":
+  {
+    "address":"D7PagfLmFXt12YG1MRjbS3GrbtSSZY1N8j",
+    "tickerkey":"BTC_DOGE",
+    "balance":"http://www.dogechain.info/chain/Dogecoin/q/addressbalance/"
+  },
+  "vert":
+  {
+    "address":"VfH7rpQhQ2TqBzr8gx6VGCXLziTL2Y51F2",
+    "tickerkey":"BTC_VTC",
+    "balance":"http://cryptexplorer.com/chain/vertcoin/q/addressbalance/"
+  }
+}
