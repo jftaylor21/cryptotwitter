@@ -21,6 +21,9 @@ TICKER_USD_BTC = 'https://www.bitstamp.net/api/ticker/'
 SLEEP_LOOP = 60*60*1
 SLEEP_COIN = 10
 
-#output
+# output options
 CONSOLE_OUTPUT = True
 TWITTER_OUTPUT = True
+
+# history files to calculate difference between now and previous update
+HISTORY = 'history.pkl'
