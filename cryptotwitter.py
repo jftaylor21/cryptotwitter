@@ -22,7 +22,7 @@ class History:
     self.usd = self.btc * self.usdPerBtc
     
   def __str__(self):
-    return self.cointype+': '+self.address+' balance: '+repr(self.balance)+' '+self.tickerkey+': '+repr(self.btcPerCoin)+' bitcoin: '+coin2str(self.btc)+ ' $'+usd2str(self.usd)
+    return getTimeString()+': '+self.cointype+': '+self.address+' balance: '+repr(self.balance)+' '+self.tickerkey+': '+repr(self.btcPerCoin)+' bitcoin: '+coin2str(self.btc)+ ' $'+usd2str(self.usd)
 
 def readurl(url):
   urlh = urllib.urlopen(url)
@@ -78,9 +78,12 @@ def delta2str(current, previous):
     
   return current+' ('+deltastr+')'
   
-def printNextUpdate(secondsToNextUpdate):
+def getTimeString():
   t = datetime.datetime.now()
-  timestr = t.strftime('%H:%M:%S: Next update in '+repr(secondsToNextUpdate)+' seconds')
+  return t.strftime('%H:%M:%S')
+  
+def printNextUpdate(secondsToNextUpdate):
+  timestr = getTimeString()+': Next update in '+repr(secondsToNextUpdate)+' seconds'
   print(timestr)
   
 def writeOutputAndSleep(api, output, secondsToNextUpdate):
@@ -125,7 +128,7 @@ def getSummaryOutput(history, prevhistory):
     pTotalBtc = pTotalBtc + h.btc
     pTotalUsd = pTotalUsd + h.usd
     
-  return '$/Bitcoin: '+delta2str(usd2str(usdPerBtc), usd2str(pUsdPerBtc))+' total BTC: '+delta2str(coin2str(totalBtc), coin2str(pTotalBtc))+' total: $'+delta2str(usd2str(totalUsd), usd2str(pTotalUsd))
+  return getTimeString()+': $/Bitcoin: '+delta2str(usd2str(usdPerBtc), usd2str(pUsdPerBtc))+' total BTC: '+delta2str(coin2str(totalBtc), coin2str(pTotalBtc))+' total: $'+delta2str(usd2str(totalUsd), usd2str(pTotalUsd))
   
 if __name__ == "__main__":
   api = getTwitterAPI()
