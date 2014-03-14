@@ -13,22 +13,15 @@ def readurl(url):
   return text
 
 def getPoloniexTicker():
-  url = 'https://poloniex.com/public?command=returnTicker'
-  text = readurl(url)
+  text = readurl(config.TICKER)
   return json.loads(text)
   
 def getTestTicker():
-  testfile = 'test.txt'
-  f = open(testfile, 'r')
-  text = f.read()
-  f.close()
+  text = readurl(config.TICKER_EXAMPLE)
   return json.loads(text)
 
 def getWallet():
-  walletfile = 'wallet.txt'
-  f = open(walletfile, 'r')
-  text = f.read()
-  f.close()
+  text = readurl(config.WALLET)
   return json.loads(text)
   
 def getTwitterAPI():
@@ -43,8 +36,7 @@ def getBalance(baseurl, address):
   return float(text)
   
 def getUSDPerBitcoin():
-  url = 'https://www.bitstamp.net/api/ticker/'
-  text = readurl(url)
+  text = readurl(config.TICKER_USD_BTC)
   j = json.loads(text)
   return float(j['last'])
 
@@ -78,12 +70,16 @@ if __name__ == "__main__":
       total = total + totalBitcoin
       usd = usdPerBitcoin * totalBitcoin
       output = cointype+': '+address+' balance: '+repr(balance)+' '+tickerkey+': '+repr(bitcoin)+' bitcoin: '+coin2str(totalBitcoin)+ ' $'+usd2str(usd)
-      print(output)
-      api.update_status(output)
-      printNextUpdate(sleepBetweenCoins)
-      time.sleep(sleepBetweenCoins)
+      if config.TWITTER_OUTPUT:
+        api.update_status(output)
+      if config.CONSOLE_OUTPUT:
+        print(output)
+        printNextUpdate(sleepBetweenCoins)
+      time.sleep(config.SLEEP_COIN)
     output = '$/Bitcoin: '+repr(usdPerBitcoin)+' total wallets (bitcoins): '+coin2str(total)+' total $'+usd2str(total*usdPerBitcoin)
-    print(output)
-    api.update_status(output)
-    printNextUpdate(sleepBetweenUpdates)
-    time.sleep(sleepBetweenUpdates)
+    if config.TWITTER_OUTPUT:
+      api.update_status(output)
+    if config.CONSOLE_OUTPUT:
+      print(output)
+      printNextUpdate(sleepBetweenUpdates)
+    time.sleep(config.SLEEP_LOOP)
