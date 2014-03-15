@@ -2,3 +2,4 @@ config.py
 *.pyc
 wallet.json
 history.pkl
+desktop.ini
