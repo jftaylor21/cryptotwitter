@@ -1,11 +1,3 @@
-# twitter authentication
-# generate online at twitter.com
-CONSUMER_KEY = 'W'
-CONSUMER_SECRET = 'XX'
-
-ACCESS_KEY = 'YYY'
-ACCESS_SECRET = 'ZZZZ'
-
 # wallet
 # contains all public coin addresses
 # see README.md and wallet-example.json

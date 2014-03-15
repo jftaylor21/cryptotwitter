@@ -1,4 +1,5 @@
 import config.config as config
+import lib.twitter
 
 import tweepy
 import time
@@ -46,12 +47,6 @@ def getWallet():
   text = readurl(config.WALLET)
   return json.loads(text)
   
-def getTwitterAPI():
-  auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET)
-  auth.set_access_token(config.ACCESS_KEY, config.ACCESS_SECRET)
-  api = tweepy.API(auth)
-  return api
-  
 def getBalance(baseurl, address):
   url = baseurl+address
   text = readurl(url)
@@ -86,9 +81,9 @@ def printNextUpdate(secondsToNextUpdate):
   timestr = getTimeString()+': Next update in '+repr(secondsToNextUpdate)+' seconds'
   print(timestr)
   
-def writeOutputAndSleep(api, output, secondsToNextUpdate):
+def writeOutputAndSleep(twitter, output, secondsToNextUpdate):
   if config.TWITTER_OUTPUT:
-    api.update_status(output)
+    twitter.tweet(output)
   if config.CONSOLE_OUTPUT:
     print(output)
     printNextUpdate(secondsToNextUpdate)
@@ -131,7 +126,7 @@ def getSummaryOutput(history, prevhistory):
   return getTimeString()+': $/Bitcoin: '+delta2str(usd2str(usdPerBtc), usd2str(pUsdPerBtc))+' total BTC: '+delta2str(coin2str(totalBtc), coin2str(pTotalBtc))+' total: $'+delta2str(usd2str(totalUsd), usd2str(pTotalUsd))
   
 if __name__ == "__main__":
-  api = getTwitterAPI()
+  twitter = lib.twitter.Twitter()
   wallet = getWallet()
   while(True):
     ticker = getPoloniexTicker()
@@ -141,7 +136,7 @@ if __name__ == "__main__":
     for cointype in wallet:
       h = History(cointype, wallet[cointype], ticker, usdPerBtc)
       hlist.append(h)
-      writeOutputAndSleep(api, str(h), config.SLEEP_COIN)
+      writeOutputAndSleep(twitter, str(h), config.SLEEP_COIN)
     output = getSummaryOutput(hlist, prevhlist)
     saveHistory(hlist)
-    writeOutputAndSleep(api, output, config.SLEEP_LOOP)
+    writeOutputAndSleep(twitter, output, config.SLEEP_LOOP)

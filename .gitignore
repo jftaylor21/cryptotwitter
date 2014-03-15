@@ -3,3 +3,4 @@ config.py
 wallet.json
 history.pkl
 desktop.ini
+config/twitter.py
