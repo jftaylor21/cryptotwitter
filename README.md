@@ -6,8 +6,8 @@
 
 ###Steps
 1. git clone https://github.com/jftaylor21/cryptotwitter.git
-1. Copy config-example.py to config.py and modify it for your environment
-1. Copy wallet-example.json to wallet.json and add your coins to it
+1. Copy config-template.py to config.py and modify it for your environment
+1. Copy wallet-template.json to wallet.json and add your coins to it
 1. Run cryptotwitter.py
 
 #Wallet Configuration
