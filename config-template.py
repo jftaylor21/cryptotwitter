@@ -13,7 +13,7 @@ WALLET = 'wallet.json'
 
 # ticker
 # contains all coin conversions
-TICKER_EXAMPLE = 'ticker-example.json'
+TICKER_EXAMPLE = 'data/ticker-example.json'
 TICKER = 'https://poloniex.com/public?command=returnTicker'
 TICKER_USD_BTC = 'https://www.bitstamp.net/api/ticker/'
 
@@ -26,4 +26,4 @@ CONSOLE_OUTPUT = True
 TWITTER_OUTPUT = True
 
 # history files to calculate difference between now and previous update
-HISTORY = 'history.pkl'
+HISTORY = 'data/history.pkl'
