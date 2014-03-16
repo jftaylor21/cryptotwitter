@@ -1,6 +1,6 @@
 #Installation
 ###Dependencies
-* [Python 2.6](http://www.python.org/)
+* [Python](http://www.python.org/)
 * [Tweepy](https://github.com/tweepy/tweepy)
 * [Git](http://git-scm.com/)
 

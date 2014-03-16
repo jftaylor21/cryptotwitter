@@ -1,12 +1,12 @@
 import config.config as config
 import lib.twitter
 
-import tweepy
 import time
 import datetime
 import json
 import urllib
 import cPickle as pickle
+import sys
 
 class History:
   def __init__(self, cointype, coindata, ticker, usdPerBtc):
@@ -83,7 +83,11 @@ def printNextUpdate(secondsToNextUpdate):
   
 def writeOutputAndSleep(twitter, output, secondsToNextUpdate):
   if config.TWITTER_OUTPUT:
-    twitter.tweet(output)
+    try:
+      twitter.tweet(output)
+    except TwitterError as e:
+      print(str(e))
+      
   if config.CONSOLE_OUTPUT:
     print(output)
     printNextUpdate(secondsToNextUpdate)
@@ -126,7 +130,13 @@ def getSummaryOutput(history, prevhistory):
   return getTimeString()+': $/Bitcoin: '+delta2str(usd2str(usdPerBtc), usd2str(pUsdPerBtc))+' total BTC: '+delta2str(coin2str(totalBtc), coin2str(pTotalBtc))+' total: $'+delta2str(usd2str(totalUsd), usd2str(pTotalUsd))
   
 if __name__ == "__main__":
-  twitter = lib.twitter.Twitter()
+  # we should exit if we can't authenticate with twitter
+  try:
+    twitter = lib.twitter.Twitter()
+  except lib.twitter.AuthenticationError as e:
+    print(str(e))
+    sys.exit(1)
+    
   wallet = getWallet()
   while(True):
     ticker = getPoloniexTicker()
