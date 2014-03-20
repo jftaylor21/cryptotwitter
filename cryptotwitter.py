@@ -72,7 +72,7 @@ def getSummaryOutput(history, prevhistory):
   pTotalBtc = prevhistory.totalInBTC(0)
   
   totalUsd = history.totalInUSD(0)
-  pTotalUsd = history.totalInUSD(0)
+  pTotalUsd = prevhistory.totalInUSD(0)
   
   # average value per bitcoin during this time
   usdPerBtc = 0
