@@ -4,12 +4,12 @@ import cPickle as pickle
 import collections
 
 class HistoryItem:
-  def __init__(self, cointype, address, tickerkey, balance, btcPerCoin, usdPerBtc):
+  def __init__(self, wallet, btcPerCoin, usdPerBtc):
     # minimum data needed to calculate other data
-    self.cointype = cointype
-    self.address = address
-    self.tickerkey = tickerkey
-    self.balance = balance
+    self.cointype = wallet.cointype
+    self.address = wallet.address
+    self.tickerkey = wallet.tickerkey
+    self.balance = wallet.balance
     self.btcPerCoin = btcPerCoin
     self.usdPerBtc = usdPerBtc
     

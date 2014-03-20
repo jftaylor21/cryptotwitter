@@ -2,54 +2,16 @@ import config.config as config
 import lib.twitter
 import lib.cryptocurrency.history
 import lib.cryptocurrency.util
+import lib.cryptocurrency.wallet
 
 import json
-import urllib
 import sys
 import time
-
-def readurl(url):
-  # need to add check for errors
-  urlh = urllib.urlopen(url)
-  text = urlh.read()
-  urlh.close()
-  return text
-
-def getPoloniexTicker():
-  text = readurl(config.TICKER)
-  j = json.loads(text)
-  j['BTC_BTC'] = '1' # hack for btc to btc conversions
-  return j
-  
-def getTestTicker():
-  text = readurl(config.TICKER_EXAMPLE)
-  j = json.loads(text)
-  j['BTC_BTC'] = '1' # hack for btc to btc conversions
-  return j
-
-def getWallet():
-  text = readurl(config.WALLET)
-  return json.loads(text)
-  
-def getBalance(baseurl, address):
-  url = baseurl+address
-  text = readurl(url)
-  return float(text)
   
 def getUSDPerBitcoin():
-  text = readurl(config.TICKER_USD_BTC)
+  text = lib.cryptocurrency.util.readurl(config.TICKER_USD_BTC)
   j = json.loads(text)
   return float(j['last'])
-  
-def delta2str(current, previous):
-  delta = float(current)-float(previous)
-  deltastr = '{0:+f}'.format(delta).rstrip('.0')
-  
-  # make sure we didn't strip everything
-  if len(deltastr) == 1:
-    deltastr = deltastr + '0'
-    
-  return current+' ('+deltastr+')'
   
 def printNextUpdate(secondsToNextUpdate):
   timestr = lib.cryptocurrency.util.getTimeString()+': Next update in '+repr(secondsToNextUpdate)+' seconds'
@@ -82,7 +44,7 @@ def getSummaryOutput(history, prevhistory):
   if pTotalBtc > 0:
     pUsdPerBtc = pTotalUsd / pTotalBtc
     
-  return lib.cryptocurrency.util.getTimeString()+': $/Bitcoin: '+delta2str(lib.cryptocurrency.util.usd2str(usdPerBtc), lib.cryptocurrency.util.usd2str(pUsdPerBtc))+' total BTC: '+delta2str(lib.cryptocurrency.util.coin2str(totalBtc), lib.cryptocurrency.util.coin2str(pTotalBtc))+' total: $'+delta2str(lib.cryptocurrency.util.usd2str(totalUsd), lib.cryptocurrency.util.usd2str(pTotalUsd))
+  return lib.cryptocurrency.util.getTimeString()+': $/Bitcoin: '+lib.cryptocurrency.util.delta2str(lib.cryptocurrency.util.usd2str(usdPerBtc), lib.cryptocurrency.util.usd2str(pUsdPerBtc))+' total BTC: '+lib.cryptocurrency.util.delta2str(lib.cryptocurrency.util.coin2str(totalBtc), lib.cryptocurrency.util.coin2str(pTotalBtc))+' total: $'+lib.cryptocurrency.util.delta2str(lib.cryptocurrency.util.usd2str(totalUsd), lib.cryptocurrency.util.usd2str(pTotalUsd))
   
 if __name__ == "__main__":
   # we should exit if we can't authenticate with twitter
@@ -92,19 +54,15 @@ if __name__ == "__main__":
     print(str(e))
     sys.exit(1)
     
-  wallet = getWallet()
+  wallet = lib.cryptocurrency.wallet.getWallets(config.WALLET)
   while(True):
-    ticker = getPoloniexTicker()
+    ticker = lib.cryptocurrency.util.getTicker(config.TICKER)
     usdPerBtc = getUSDPerBitcoin()
     prevhistory = lib.cryptocurrency.history.History(1, config.HISTORY)
     history = lib.cryptocurrency.history.History(1)
     for cointype in wallet:
-      coindata = wallet[cointype]
-      address = coindata['address']
-      tickerkey = coindata['tickerkey']
-      balance = getBalance(coindata['balance'], address)
-      btcPerCoin = float(ticker[tickerkey])
-      h = lib.cryptocurrency.history.HistoryItem(cointype, address, tickerkey, balance, btcPerCoin, usdPerBtc)
+      btcPerCoin = float(ticker[wallet[cointype].tickerkey])
+      h = lib.cryptocurrency.history.HistoryItem(wallet[cointype], btcPerCoin, usdPerBtc)
       history.addHistory(h)
       writeOutputAndSleep(twitter, str(h), config.SLEEP_COIN)
     output = getSummaryOutput(history, prevhistory)
