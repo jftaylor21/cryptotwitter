@@ -28,9 +28,13 @@ def delta2str(current, previous):
 # url related
 def readurl(url):
   # need to add check for errors
-  urlh = urllib.urlopen(url)
-  text = urlh.read()
-  urlh.close()
+  text = ''
+  try:
+    urlh = urllib.urlopen(url)
+    text = urlh.read()
+    urlh.close()
+  except IOErrror as e:
+    pass
   return text
   
 # ticker related
